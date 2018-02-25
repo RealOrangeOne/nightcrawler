@@ -1,0 +1,19 @@
+version: 2.0
+
+jobs:
+    build:
+        docker:
+            - image: jimmycuadra/rust
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                    - cargo-{{ checksum "Cargo.lock" }}
+            - run: which rustfmt || cargo install rustfmt
+            - run: cargo fmt -- --write-mode=diff --force
+            - run: cargo build
+            - run: cargo build --release
+            - save_cache:
+                key: cargo-{{ checksum "Cargo.lock" }}
+                paths:
+                    - ~/.cargo
