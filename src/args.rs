@@ -1,4 +1,4 @@
-use clap::{App, AppSettings, ArgMatches, Arg};
+use clap::{App, AppSettings, Arg, ArgMatches};
 use url::Url;
 
 static VERBOSE_ARG_NAME: &str = "verbose";
@@ -19,13 +19,18 @@ fn build() -> App<'static, 'static> {
         .global_setting(AppSettings::VersionlessSubcommands)
         .global_setting(AppSettings::ColoredHelp)
         .global_setting(AppSettings::StrictUtf8)
-        .arg(Arg::with_name(VERBOSE_ARG_NAME).global(true).short("v").long("verbose").help(
-            "Show verbose output"
-        ))
         .arg(
-            Arg::with_name(URL_ARG_NAME).help("URL to browse").required(true).validator(
-                validate_url
-            )
+            Arg::with_name(VERBOSE_ARG_NAME)
+                .global(true)
+                .short("v")
+                .long("verbose")
+                .help("Show verbose output"),
+        )
+        .arg(
+            Arg::with_name(URL_ARG_NAME)
+                .help("URL to browse")
+                .required(true)
+                .validator(validate_url),
         );
 }
 
@@ -40,10 +45,10 @@ pub fn get_verbose(m: &ArgMatches) -> bool {
 pub fn parse_url(m: &ArgMatches) -> Url {
     let url_value = match m.value_of(URL_ARG_NAME) {
         Some(url) => url,
-        None => unreachable!(),  // required argument
+        None => unreachable!(), // required argument
     };
     return match Url::parse(url_value) {
         Ok(url) => url,
-        Err(_) => unreachable!(),  // Validation is handled by arg parser
+        Err(_) => unreachable!(), // Validation is handled by arg parser
     };
 }

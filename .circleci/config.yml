@@ -10,7 +10,7 @@ jobs:
                 keys:
                     - cargo-{{ checksum "Cargo.lock" }}
             - run: rustup component add rustfmt-preview
-            - run: cargo fmt -- --write-mode=diff --force
+            - run: cargo fmt -- --write-mode=diff
             - run: cargo build
             - run: cargo build --release
             - save_cache:
