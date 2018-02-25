@@ -9,7 +9,7 @@ jobs:
             - restore_cache:
                 keys:
                     - cargo-{{ checksum "Cargo.lock" }}
-            - run: which rustfmt || cargo install rustfmt
+            - run: rustup component add rustfmt-preview
             - run: cargo fmt -- --write-mode=diff --force
             - run: cargo build
             - run: cargo build --release
