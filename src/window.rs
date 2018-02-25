@@ -5,7 +5,7 @@ use config::Config;
 use webview::build_webview;
 
 #[derive(Msg, Debug)]
-pub enum Msg {
+pub enum Actions {
     Quit,
 }
 
@@ -17,15 +17,15 @@ pub struct Win {
 impl Update for Win {
     type Model = Config;
     type ModelParam = Config;
-    type Msg = Msg;
+    type Msg = Actions;
 
     fn model(_: &Relm<Self>, config: Config) -> Self::Model {
         return config;
     }
 
-    fn update(&mut self, event: Msg) {
+    fn update(&mut self, event: Self::Msg) {
         match event {
-            Msg::Quit => main_quit(),
+            Actions::Quit => main_quit(),
         };
     }
 }
@@ -51,7 +51,7 @@ impl Widget for Win {
             relm,
             window,
             connect_delete_event(_, _),
-            return (Some(Msg::Quit), Inhibit(false))
+            return (Some(Actions::Quit), Inhibit(false))
         );
 
         return Win { window, webview };
