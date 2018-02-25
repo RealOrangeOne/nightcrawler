@@ -1,0 +1,10 @@
+chain_one_line_max = 100
+single_line_if_else_max_width = 100
+array_width = 100
+fn_call_width = 100
+reorder_import_names = true
+reorder_imports_in_group = true
+trailing_comma = "Never"
+trailing_semicolon = true
+fn_args_density = "CompressedIfEmpty"
+imports_indent = "Visual"
