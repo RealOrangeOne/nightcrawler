@@ -14,6 +14,7 @@ use relm::Widget;
 mod args;
 mod config;
 mod window;
+mod webview;
 
 fn main() {
     let app_config = config::from_args(args::get_matches());

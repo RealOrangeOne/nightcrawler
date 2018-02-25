@@ -1,7 +1,8 @@
-use gtk::{main_quit, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
+use gtk::{main_quit, ContainerExt, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
 
 use relm::{Relm, Update, Widget};
 use config::Config;
+use webview::build_webview;
 
 #[derive(Msg, Debug)]
 pub enum Msg {
@@ -35,10 +36,13 @@ impl Widget for Win {
         return self.window.clone();
     }
 
-    fn view(relm: &Relm<Self>, _: Self::Model) -> Self {
+    fn view(relm: &Relm<Self>, config: Self::Model) -> Self {
         let window = Window::new(WindowType::Toplevel);
+        let webview = build_webview(config);
 
         window.set_title("Window Title");
+
+        window.add(&webview);
 
         window.show_all();
 

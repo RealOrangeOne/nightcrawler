@@ -4,8 +4,14 @@ use url::Url;
 use args::{get_verbose, parse_url};
 
 pub struct Config {
-    verbose: bool,
+    pub verbose: bool,
     initial_url: Url,
+}
+
+impl Config {
+    pub fn get_initial_url(&self) -> &str {
+        return self.initial_url.as_str();
+    }
 }
 
 pub fn from_args(args: ArgMatches) -> Config {
