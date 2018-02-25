@@ -1,5 +1,5 @@
 use clap::{App, AppSettings, ArgMatches, Arg};
-
+use url::Url;
 
 fn build() -> App<'static, 'static> {
     return App::new(crate_name!())
@@ -23,4 +23,12 @@ fn build() -> App<'static, 'static> {
 
 pub fn get_matches() -> ArgMatches<'static> {
     return build().get_matches();
+}
+
+pub fn get_verbose(m: &ArgMatches) -> bool {
+    return m.is_present("verbose");
+}
+
+pub fn parse_url(m: &ArgMatches) -> Url {
+    return Url::parse(m.value_of("URL").unwrap()).unwrap();
 }

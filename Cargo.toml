@@ -5,3 +5,4 @@ authors = ["Jake Howard <git@theorangeone.net>"]
 
 [dependencies]
 clap = "2.30.0"
+url = "1.7.0"
