@@ -3,6 +3,7 @@ use url::Url;
 
 static VERBOSE_ARG_NAME: &str = "verbose";
 static URL_ARG_NAME: &str = "url";
+static DEFAULT_URL: &str = "https://start.duckduckgo.com";
 
 fn validate_url(input: String) -> Result<(), String> {
     let url_result = Url::parse(input.as_str());
@@ -30,6 +31,7 @@ fn build() -> App<'static, 'static> {
             Arg::with_name(URL_ARG_NAME)
                 .help("URL to browse")
                 .required(true)
+                .default_value(DEFAULT_URL)
                 .validator(validate_url),
         );
 }

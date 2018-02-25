@@ -1,5 +1,5 @@
 use gtk::{main_quit, ContainerExt, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
-use webkit2gtk::{WebView, WebViewExtManual, WebViewExt};
+use webkit2gtk::{WebView, WebViewExt, WebViewExtManual};
 use relm::{Relm, Update, Widget};
 use config::Config;
 use webview::build_webview;
@@ -14,7 +14,6 @@ pub struct Win {
     window: Window,
     webview: WebView,
 }
-
 
 fn build_window_title(pre: String) -> String {
     return format!("{} - {}", pre.as_str(), crate_name!());
@@ -36,7 +35,10 @@ impl Update for Win {
         match event {
             Actions::Quit => main_quit(),
             Actions::URIChanged => {
-                window.set_title(build_window_title(webview.get_uri().expect("Failed to get webview uri")).as_str());
+                window.set_title(
+                    build_window_title(webview.get_uri().expect("Failed to get webview uri"))
+                        .as_str(),
+                );
             }
         };
     }
