@@ -1,5 +1,5 @@
 use gtk::{main_quit, ContainerExt, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
-
+use webkit2gtk::WebView;
 use relm::{Relm, Update, Widget};
 use config::Config;
 use webview::build_webview;
@@ -11,6 +11,7 @@ pub enum Msg {
 
 pub struct Win {
     window: Window,
+    webview: WebView
 }
 
 impl Update for Win {
@@ -53,6 +54,6 @@ impl Widget for Win {
             return (Some(Msg::Quit), Inhibit(false))
         );
 
-        return Win { window };
+        return Win { window, webview };
     }
 }

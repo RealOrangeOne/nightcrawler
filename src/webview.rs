@@ -1,4 +1,4 @@
-use webkit2gtk::{WebContext, WebView, WebViewExt, WebViewExtManual};
+use webkit2gtk::{WebContext, WebView, WebViewExt};
 use config::Config;
 
 pub fn build_webview(config: Config) -> WebView {
