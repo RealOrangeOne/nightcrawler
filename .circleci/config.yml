@@ -11,6 +11,7 @@ jobs:
                     - cargo-{{ checksum "Cargo.lock" }}
             - run: rustup component add rustfmt-preview
             - run: cargo fmt -- --write-mode=diff
+            - run: cargo search  # Update registry outside build process
             - run: cargo build
             - run: cargo build --release
             - save_cache:
