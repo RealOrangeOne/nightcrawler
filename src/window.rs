@@ -1,18 +1,11 @@
-use gtk::{
-    Inhibit,
-    WidgetExt,
-    Window,
-    WindowType,
-    GtkWindowExt,
-    main_quit
-};
+use gtk::{main_quit, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
 
 use relm::{Relm, Update, Widget};
 use config::Config;
 
 #[derive(Msg, Debug)]
 pub enum Msg {
-    Quit
+    Quit,
 }
 
 pub struct Win {
@@ -30,7 +23,7 @@ impl Update for Win {
 
     fn update(&mut self, event: Msg) {
         match event {
-            Msg::Quit => main_quit()
+            Msg::Quit => main_quit(),
         };
     }
 }
@@ -49,10 +42,13 @@ impl Widget for Win {
 
         window.show_all();
 
-        connect!(relm, window, connect_delete_event(_, _), return (Some(Msg::Quit), Inhibit(false)));
-
-        return Win {
+        connect!(
+            relm,
             window,
-        };
+            connect_delete_event(_, _),
+            return (Some(Msg::Quit), Inhibit(false))
+        );
+
+        return Win { window };
     }
 }
