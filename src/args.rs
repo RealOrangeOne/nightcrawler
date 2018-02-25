@@ -42,5 +42,12 @@ pub fn get_verbose(m: &ArgMatches) -> bool {
 }
 
 pub fn parse_url(m: &ArgMatches) -> Url {
-    return Url::parse(m.value_of(URL_ARG_NAME).unwrap()).unwrap();
+    let url_value = match m.value_of(URL_ARG_NAME) {
+        Some(url) => url,
+        None => unreachable!()  // required argument
+    };
+    return match Url::parse(url_value) {
+        Ok(url) => url,
+        Err(_) => unreachable!()  // Validation is handled by arg parser
+    };
 }
