@@ -3,6 +3,7 @@ use url::Url;
 
 use args::{get_verbose, parse_url};
 
+#[derive(Debug, Clone)]
 pub struct Config {
     pub verbose: bool,
     initial_url: Url,

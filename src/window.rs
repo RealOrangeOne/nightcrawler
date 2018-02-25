@@ -1,5 +1,5 @@
 use gtk::{main_quit, ContainerExt, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
-use webkit2gtk::{WebView, WebViewExtManual};
+use webkit2gtk::{WebView, WebViewExtManual, WebViewExt};
 use relm::{Relm, Update, Widget};
 use config::Config;
 use webview::build_webview;
@@ -15,6 +15,11 @@ pub struct Win {
     webview: WebView,
 }
 
+
+fn build_window_title(pre: String) -> String {
+    return format!("{} - {}", pre.as_str(), crate_name!());
+}
+
 impl Update for Win {
     type Model = Config;
     type ModelParam = Config;
@@ -25,9 +30,14 @@ impl Update for Win {
     }
 
     fn update(&mut self, event: Self::Msg) {
+        let window = &self.window;
+        let webview = &self.webview;
+
         match event {
             Actions::Quit => main_quit(),
-            action => println!("{:?}", action),
+            Actions::URIChanged => {
+                window.set_title(build_window_title(webview.get_uri().expect("Failed to get webview uri")).as_str());
+            }
         };
     }
 }
@@ -41,9 +51,9 @@ impl Widget for Win {
 
     fn view(relm: &Relm<Self>, config: Self::Model) -> Self {
         let window = Window::new(WindowType::Toplevel);
-        let webview = build_webview(config);
+        let webview = build_webview(config.clone());
 
-        window.set_title("Window Title");
+        window.set_title(build_window_title(config.get_initial_url().into()).as_str());
 
         window.add(&webview);
 
