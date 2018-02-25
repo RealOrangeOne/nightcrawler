@@ -1,5 +1,5 @@
 use gtk::{main_quit, ContainerExt, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
-use webkit2gtk::WebView;
+use webkit2gtk::{WebView, WebViewExtManual};
 use relm::{Relm, Update, Widget};
 use config::Config;
 use webview::build_webview;
@@ -7,11 +7,12 @@ use webview::build_webview;
 #[derive(Msg, Debug)]
 pub enum Actions {
     Quit,
+    URIChanged,
 }
 
 pub struct Win {
     window: Window,
-    webview: WebView
+    webview: WebView,
 }
 
 impl Update for Win {
@@ -26,6 +27,7 @@ impl Update for Win {
     fn update(&mut self, event: Self::Msg) {
         match event {
             Actions::Quit => main_quit(),
+            action => println!("{:?}", action),
         };
     }
 }
@@ -53,6 +55,8 @@ impl Widget for Win {
             connect_delete_event(_, _),
             return (Some(Actions::Quit), Inhibit(false))
         );
+
+        connect!(relm, webview, connect_uri_changed(), Actions::URIChanged);
 
         return Win { window, webview };
     }
