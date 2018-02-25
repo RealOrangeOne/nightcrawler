@@ -4,6 +4,14 @@ use url::Url;
 static VERBOSE_ARG_NAME: &str = "verbose";
 static URL_ARG_NAME: &str = "url";
 
+fn validate_url(input: String) -> Result<(), String> {
+    let url_result = Url::parse(input.as_str());
+    match url_result {
+        Ok(_) => return Ok(()),
+        Err(e) => return Err(format!("{}", e))
+    };
+}
+
 fn build() -> App<'static, 'static> {
     return App::new(crate_name!())
         .about(crate_description!())
@@ -21,6 +29,7 @@ fn build() -> App<'static, 'static> {
         .arg(Arg::with_name(URL_ARG_NAME)
             .help("URL to browse")
             .required(true)
+            .validator(validate_url)
         );
 }
 
