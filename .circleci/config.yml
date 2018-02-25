@@ -6,15 +6,8 @@ jobs:
             - image: rust:1.24.0
         steps:
             - checkout
-            - restore_cache:
-                keys:
-                    - cargo-{{ checksum "Cargo.lock" }}
             - run: rustup component add rustfmt-preview
             - run: cargo fmt -- --write-mode=diff
             - run: cargo search  # Update registry outside build process
             - run: cargo build
             - run: cargo build --release
-            - save_cache:
-                key: cargo-{{ checksum "Cargo.lock" }}
-                paths:
-                    - ~/.cargo
