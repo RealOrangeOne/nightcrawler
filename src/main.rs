@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate clap;
 extern crate gtk;
+extern crate gdk;
 #[macro_use]
 extern crate relm;
 #[macro_use]

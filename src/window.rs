@@ -1,18 +1,24 @@
 use gtk::{main_quit, ContainerExt, GtkWindowExt, Inhibit, WidgetExt, Window, WindowType};
+use gdk::{EventKey, ModifierType};
+use gdk::enums::key;
 use webkit2gtk::{WebView, WebViewExt, WebViewExtManual};
 use relm::{Relm, Update, Widget};
 use config::Config;
 use webview::build_webview;
 
+static ALT_MASK: ModifierType = ModifierType::MOD1_MASK;
+
 #[derive(Msg, Debug)]
 pub enum Actions {
     Quit,
     URIChanged,
+    KeyPress(EventKey)
 }
 
 pub struct Win {
     window: Window,
     webview: WebView,
+    model: Config
 }
 
 fn build_window_title(pre: String) -> String {
@@ -39,10 +45,26 @@ impl Update for Win {
                     build_window_title(webview.get_uri().expect("Failed to get webview uri"))
                         .as_str(),
                 );
+            },
+            Actions::KeyPress(pressed_key) => {
+                let has_alt = pressed_key.get_state().contains(ALT_MASK);
+                match pressed_key.get_keyval() {
+                    k if k == key::Left && has_alt => {
+                        webview.go_back();
+                    },
+                    k if k == key::Right && has_alt => {
+                        webview.go_forward();
+                    },
+                    k if k == key::Home && has_alt => {
+                        webview.load_uri(self.model.get_initial_url());
+                    }
+                    _ => ()
+                }
             }
         };
     }
 }
+
 
 impl Widget for Win {
     type Root = Window;
@@ -69,7 +91,8 @@ impl Widget for Win {
         );
 
         connect!(relm, webview, connect_uri_changed(), Actions::URIChanged);
+        connect!(relm, window, connect_key_press_event(_, key), return (Actions::KeyPress(key.clone()), Inhibit(false)));
 
-        return Win { window, webview };
+        return Win { window, webview, model: config };
     }
 }
