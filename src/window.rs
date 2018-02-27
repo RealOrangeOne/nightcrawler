@@ -60,6 +60,9 @@ impl Update for Win {
                     k if k == key::Home && has_alt => {
                         webview.load_uri(self.model.get_initial_url());
                     }
+                    key::F5 => {
+                        webview.reload_bypass_cache();
+                    }
                     _ => (),
                 }
             }
