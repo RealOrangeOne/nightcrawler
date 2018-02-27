@@ -6,8 +6,6 @@ use relm::{Relm, Update, Widget};
 use config::Config;
 use webview::build_webview;
 
-static ALT_MASK: ModifierType = ModifierType::MOD1_MASK;
-
 #[derive(Msg, Debug)]
 pub enum Actions {
     Quit,
@@ -47,7 +45,7 @@ impl Update for Win {
                 window.set_title(build_window_title(webview).as_str());
             },
             Actions::KeyPress(pressed_key) => {
-                let has_alt = pressed_key.get_state().contains(ALT_MASK);
+                let has_alt = pressed_key.get_state().contains(ModifierType::MOD1_MASK);
                 match pressed_key.get_keyval() {
                     k if k == key::Left && has_alt => {
                         webview.go_back();
