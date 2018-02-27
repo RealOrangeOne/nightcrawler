@@ -12,7 +12,8 @@ static ALT_MASK: ModifierType = ModifierType::MOD1_MASK;
 pub enum Actions {
     Quit,
     URIChanged,
-    KeyPress(EventKey)
+    KeyPress(EventKey),
+    LoadChanged
 }
 
 pub struct Win {
@@ -21,8 +22,10 @@ pub struct Win {
     model: Config
 }
 
-fn build_window_title(pre: String) -> String {
-    return format!("{} - {}", pre.as_str(), crate_name!());
+fn build_window_title(webview: &WebView) -> String {
+    let uri = webview.get_uri().expect("Failed to get webview uri");
+    let loading_msg = if webview.is_loading() { "(loading)" } else { "" };
+    return format!("{} - {} {}", uri.as_str(), crate_name!(), loading_msg);
 }
 
 impl Update for Win {
@@ -40,11 +43,8 @@ impl Update for Win {
 
         match event {
             Actions::Quit => main_quit(),
-            Actions::URIChanged => {
-                window.set_title(
-                    build_window_title(webview.get_uri().expect("Failed to get webview uri"))
-                        .as_str(),
-                );
+            Actions::URIChanged | Actions::LoadChanged => {
+                window.set_title(build_window_title(webview).as_str());
             },
             Actions::KeyPress(pressed_key) => {
                 let has_alt = pressed_key.get_state().contains(ALT_MASK);
@@ -77,7 +77,7 @@ impl Widget for Win {
         let window = Window::new(WindowType::Toplevel);
         let webview = build_webview(config.clone());
 
-        window.set_title(build_window_title(config.get_initial_url().into()).as_str());
+        window.set_title(build_window_title(&webview).as_str());
 
         window.add(&webview);
 
@@ -91,6 +91,7 @@ impl Widget for Win {
         );
 
         connect!(relm, webview, connect_uri_changed(), Actions::URIChanged);
+        connect!(relm, webview, connect_load_changed(_, _), Actions::LoadChanged);
         connect!(relm, window, connect_key_press_event(_, key), return (Actions::KeyPress(key.clone()), Inhibit(false)));
 
         return Win { window, webview, model: config };
